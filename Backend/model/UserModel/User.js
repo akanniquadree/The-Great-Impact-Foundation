@@ -7,13 +7,12 @@ const UserSchema = new mongoose.Schema({
     email: {type:String, required: true, unique:true },
     password: {type:String, required: true},
     profilePics:{type: String, default: ""},
-    isAdmin:{type:Boolean, required: true, default: false}
 },
 {timestamps: true}
 )
  
 
-const User = mongoose.model("User", UserSchema)
+const userModel = mongoose.model("User", UserSchema)
 
 
-export default User;
+export default userModel;

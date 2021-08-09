@@ -8,7 +8,7 @@ categoryRoute.put("/", async (req, res)=>{
     try {
         const newCat = new Category(req.body)
         const saveCat = await newCat.save()
-        res.status(400).send(saveCat) 
+        res.status(200).send(saveCat) 
     } catch (error) {
         res.status(500).send({msg: error.msg})
         

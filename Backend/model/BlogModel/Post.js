@@ -10,7 +10,8 @@ const PostSchema = new mongoose.Schema({
     thirdPara: {type:String, required: false},
     fourthPara: {type:String, required: false},
     detail:{type: String, default: ""},
-    categories: { type: Array, required: false}
+    categories: { type: Array, required: false},
+    comment: { type: Array, required: false}
 },
 {timestamps: true}
 )

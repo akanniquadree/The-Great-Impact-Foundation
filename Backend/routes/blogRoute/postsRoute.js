@@ -21,6 +21,7 @@ postRouter.post("/", async (req, res)=>{
 postRouter.get("/", async(req, res)=>{
     const username = req.query.user
     const catName = req.query.cat;
+    const comment  = req.query.comment
     try{
         let posts;
         if(username){
@@ -28,6 +29,10 @@ postRouter.get("/", async(req, res)=>{
         }else if (catName){
             posts = await Post.find({categories:{
                 $in:[catName]
+            }})
+        }else if(comment){
+            posts = await Post.find({comment:{
+                $in:[comment]
             }})
         }else{
             posts = await Post.find({})
@@ -38,7 +43,7 @@ postRouter.get("/", async(req, res)=>{
     }
 })
 postRouter.get("/:id", async(req, res)=>{
-        postId = req.params.id
+       const postId = req.params.id
     try{
         const post = await Post.findById({_id:postId})
         if(post){
@@ -98,6 +103,7 @@ postRouter.delete("/:id", async(req, res)=>{
     res.status(401).send("You can only update your own account")
 }
 })
+
 
 
 
