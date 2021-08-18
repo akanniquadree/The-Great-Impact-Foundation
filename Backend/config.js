@@ -1,4 +1,4 @@
 export default{
-    MONGODB_URL : process.env.MONGODB_URL || "mongodb://localhost/GIF" 
-
+    MONGODB_URL : process.env.MONGODB_URL || "mongodb://localhost/GIF",
+    JWT_SECRET: process.env.JWT_SECRET || "somethingsecret"
 }

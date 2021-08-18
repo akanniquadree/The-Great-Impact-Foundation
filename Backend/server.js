@@ -29,21 +29,21 @@ mongoose.connect("mongodb+srv://GIF1234:youngdollar@great-impact-foundation.6itw
     useFindAndModify: false
 }).catch(error=> console.log(error.reason));
 
- const storage = multer.diskStorage({
-     destination: (req, file, cb)=>{
-         cb(null, "images");
-     }, 
-     filename: (req, file, cb)=>{
-         cb(null, req.body.name)
-     }
- })
+//  const storage = multer.diskStorage({
+//      destination: (req, file, cb)=>{
+//          cb(null, "images");
+//      }, 
+//      filename: (req, file, cb)=>{
+//          cb(null, req.body.name)
+//      }
+//  })
 
- const upload = multer({storage:storage})
- app.post("/api/upload", upload.single("file"), (req, res)=>{
-     res.status(200).send("File has been uploaded")
- })
+//  const upload = multer({storage:storage})
+//  app.post("/api/upload", upload.single("file"), (req, res)=>{
+//      res.status(200).send("File has been uploaded")
+//  })
 
-
+app.use("/upload", express.static("upload"))
 app.use("/api/auth", router);
  app.use("/api/user", userRouter);
  app.use("/api/posts", postRouter);

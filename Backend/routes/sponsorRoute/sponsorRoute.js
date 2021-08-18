@@ -1,6 +1,27 @@
 import express from "express"
 import Sponsor from "../../model/SponsorModel/sponsorModel.js"
+import multer from "multer"
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "images")
+    },
+    filename: function (req, file, cb) {
+        cb(null, new Date().toLocalString() + file.originalname)
+    }
+})
+const fileFilter = (req, file, cb)=>{
+    if(file.mimetype === "image/jpg" || "image/png"){
+        cb(null, true)
+    }else{
+        cb(new Error("Can only upload jpg and png"), false)
+    }
+}
+const upload = multer({
+    storage:storage,
+    limit: { filesize: 1024 * 1024 * 5},
+    fileFilter: fileFilter
+})
 const sponsorRouter = express.Router()
 
 sponsorRouter.get("/", async(req, res)=>{
@@ -8,12 +29,12 @@ sponsorRouter.get("/", async(req, res)=>{
         res.status(200).send(sponsor)
 })
 
-sponsorRouter.post("/", async(req, res)=>{
+sponsorRouter.post("/", upload.single("SponsorImage"), async(req, res)=>{
     
     try {
        const getSponsor = new Sponsor({
         name: req.body.name,
-        image: req.body.image,
+        image: req.file.path,
         loc:req.body.loc,
         desc: req.body.desc
     })
@@ -34,7 +55,7 @@ sponsorRouter.put("/:id", async(req, res)=>{
         const getSponsor = await Sponsor.findById({_id:sponsorId})
         if(getSponsor){
             getSponspor.name = req.body.name;
-            getSponspor.image = req.body.image;
+            getSponspor.image = req.file.path;
             getSponspor.loc = req.body.loc;
             getSponspor.desc = req.body.desc;
 
