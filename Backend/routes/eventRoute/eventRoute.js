@@ -4,24 +4,22 @@ import multer from "multer"
 
 const eventRouter = express.Router()
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "images")
+    destination:  (req, file, callback) =>{
+        callback(null, "./frontend/public/uploads/")
     },
-    filename: function (req, file, cb) {
-        cb(null, new Date().toLocalString() + file.originalname)
+    filename:  (req, file, callback) =>{
+        callback(null,  file.originalname)
     }
 })
-const fileFilter = (req, file, cb)=>{
-    if(file.mimetype === "image/jpg" || "image/png"){
-        cb(null, true)
-    }else{
-        cb(new Error("Can only upload jpg and png"), false)
-    }
-}
+// const fileFilter = (req, file, cb)=>{
+//     if(file.mimetype === "image/jpg" || "image/png"){
+//         cb(null, true)
+//     }else{
+//         cb(new Error("Can only upload jpg and png"), false)
+//     }
+// }
 const upload = multer({
-    storage:storage,
-    limit: { filesize: 1024 * 1024 * 5},
-    fileFilter: fileFilter
+    storage:storage
 })
 
 
@@ -44,10 +42,10 @@ eventRouter.get("/:id", async(req, res)=>{
         }
 })
 
-eventRouter.post("/", upload.single("EventImage"), async(req, res)=>{
+eventRouter.post("/", upload.single("image"), async(req, res)=>{
     try {
         const newEvent = new Event({
-            image: req.file.path,
+            image: req.file.originalname,
             heading: req.body.heading,
             date: req.body.date,
             month: req.body.month,

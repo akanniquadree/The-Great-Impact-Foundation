@@ -1,13 +1,26 @@
 import express from "express"
-import Project from "../../model/ProjectModel/projectModel.js"
+import Project from "../../model/ProjectModel/projectModel.js";
+import multer from "multer"
 
 
 const projectRouter = express.Router()
 
+const storage = multer.diskStorage({
+    destination: (req, file, callback)=>{
+        callback(null, "./frontend/public/uploads/")
+    },
+    filename: (req, file, callback)=>{
+        callback (null, file.originalname)
+    }
+})
+
+const upload = multer({
+    storage:storage
+})
 
 projectRouter.get("/", async(req, res)=>{
     const projects = await Project.find({})
-    re.send(projects)
+    res.send(projects)
 })
 
 
@@ -25,10 +38,10 @@ projectRouter.get("/:id", async(req, res)=>{
     }
 })
 
-projectRouter.post("/", async(req, res)=>{
+projectRouter.post("/", upload.single('image'), async(req, res)=>{
     try {
         const newProject = new Project({
-            image: req.body.image,
+            image: req.file.originalname,
             heading: req.body.heading,
             desc: req.body.desc,
             goal: req.body.goal,

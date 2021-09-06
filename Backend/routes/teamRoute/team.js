@@ -5,24 +5,22 @@ import multer from "multer"
 const teamRoute = express.Router()
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "images")
+    destination: (req, file, callback) =>{
+        callback(null, "./frontend/public/uploads/");
     },
-    filename: function (req, file, cb) {
-        cb(null, new Date().toLocalString() + file.originalname)
+    filename:  (req, file, callback)=> {
+        callback(null, file.originalname);
     }
 })
-const fileFilter = (req, file, cb)=>{
-    if(file.mimetype === "image/jpg" || "image/png"){
-        cb(null, true)
-    }else{
-        cb(new Error("Can only upload jpg and png"), false)
-    }
-}
+// const fileFilter = (req, file, cb)=>{
+//     if(file.mimetype === "image/jpg" || "image/png"){
+//         cb(null, true)
+//     }else{
+//         cb(new Error("Can only upload jpg and png"), false)
+//     }
+// }
 const upload = multer({
-    storage:storage,
-    limit: { filesize: 1024 * 1024 * 5},
-    fileFilter: fileFilter
+    storage:storage
 })
 
 
@@ -37,28 +35,33 @@ teamRoute.get("/:id", async(req, res)=>{
     res.send(team)
 })
 
-teamRoute.post("/", upload.single("TeamImage"), async(req, res)=>{
-    const team = new Team({
-        image: req.file.path,
+teamRoute.post("/", upload.single("articleImage"), async(req, res)=>{
+    try{ 
+        const team = new Team({
         name: req.body.name,
+        articleImage: req.file.originalname,
         post: req.body.post,
         facebook: req.body.facebook,
         twitter: req.body.twitter,
         instagram: req.body.instagram
-    })
-    const saveTeam = await team.save()
-    if(saveTeam){
-        return res.status(201).send({msg: "New Team member uploaded", data: newTeam})
+        })
+        const saveTeam = await team.save()
+        if(saveTeam){
+        return res.status(201).json({msg: "New Team member uploaded", data: saveTeam})
+        }
+        return res.status(500).json({message: "Error in creating team member"})
+    }catch(error){
+        res.status(400).send({message: error.message})
     }
-    return res.status(500).send({message: "Error in creating team member"})
 })
+
 
 teamRoute.put("/:id", async(req, res)=>{
     try {
         const TeamId = req.params.id;
         const getTeam = await Team.findById({_id:TeamId})
         if(getTeam){
-            getTeam.image= req.file.path;
+            getTeam.articleImage= req.file.originalname;
             getTeam.name= req.body.name;
             getTeam.post= req.body.post;
             getTeam.facebook= req.body.facebook,
@@ -76,7 +79,7 @@ teamRoute.put("/:id", async(req, res)=>{
 })
 
 teamRoute.delete("/:id", async(req, res)=>{
-    const deleteTeam = await Team.findById(req.body.id)
+    const deleteTeam = await Team.findById(req.params.id)
     if(deleteTeam){
         await deleteTeam.remove()
         res.send({message: "Product Deleted"})

@@ -12,14 +12,16 @@ import volunteeRouter from "./routes/volunteeRoute/volunteeRoute.js";
 import sponsorRouter from "./routes/sponsorRoute/sponsorRoute.js";
 import eventRouter from "./routes/eventRoute/eventRoute.js";
 import projectRouter from "./routes/projectRoute/projectRoute.js";
+import galleryRouter from "./routes/galleryRoute/galleryRoute.js";
 
 
 dotenv.config()
 
 const app = express();
 
-app.use(express.urlencoded({extended:true}));
-app.use(express.json());
+app.use(express.json({limit: "25mb"}));
+app.use(express.urlencoded({limit: "25mb", extended: true, parameterLimit:50000}));
+
 
 // const mongodb_url = config.MONGODB_URL
 mongoose.connect("mongodb+srv://GIF1234:youngdollar@great-impact-foundation.6itwq.mongodb.net/GIF?retryWrites=true&w=majority", {
@@ -29,21 +31,26 @@ mongoose.connect("mongodb+srv://GIF1234:youngdollar@great-impact-foundation.6itw
     useFindAndModify: false
 }).catch(error=> console.log(error.reason));
 
-//  const storage = multer.diskStorage({
-//      destination: (req, file, cb)=>{
-//          cb(null, "images");
+//  let storage = multer.diskStorage({
+//      destination: function(req, file, cb){
+//          cb(null, './upload');
 //      }, 
-//      filename: (req, file, cb)=>{
-//          cb(null, req.body.name)
+//      filename: function(req, file, cb){
+//          cb(null, file.originalname)
 //      }
 //  })
 
-//  const upload = multer({storage:storage})
-//  app.post("/api/upload", upload.single("file"), (req, res)=>{
-//      res.status(200).send("File has been uploaded")
+//  const upload = multer({storage:storage}).single('file')
+
+//  app.post("/image", upload, (req, res)=>{
+//      if(!req.file) return res.status(400).send("image is required");
+//      return res.json({success:true, message:"image successfully upload"})
+
+     
 //  })
 
-app.use("/upload", express.static("upload"))
+
+
 app.use("/api/auth", router);
  app.use("/api/user", userRouter);
  app.use("/api/posts", postRouter);
@@ -53,6 +60,7 @@ app.use("/api/auth", router);
  app.use("/api/sponsor", sponsorRouter);
  app.use("/api/event", eventRouter);
  app.use("/api/project", projectRouter);
+ app.use("/api/gallery", galleryRouter);
  
 
 

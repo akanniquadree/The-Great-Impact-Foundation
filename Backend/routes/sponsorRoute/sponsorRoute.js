@@ -3,24 +3,16 @@ import Sponsor from "../../model/SponsorModel/sponsorModel.js"
 import multer from "multer"
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "images")
+    destination:  (req, file, callback) => {
+        callback(null, "./frontend/public/uploads/")
     },
-    filename: function (req, file, cb) {
-        cb(null, new Date().toLocalString() + file.originalname)
+    filename: (req, file, callback) => {
+        callback(null,  file.originalname)
     }
 })
-const fileFilter = (req, file, cb)=>{
-    if(file.mimetype === "image/jpg" || "image/png"){
-        cb(null, true)
-    }else{
-        cb(new Error("Can only upload jpg and png"), false)
-    }
-}
+
 const upload = multer({
-    storage:storage,
-    limit: { filesize: 1024 * 1024 * 5},
-    fileFilter: fileFilter
+    storage:storage
 })
 const sponsorRouter = express.Router()
 
@@ -29,18 +21,17 @@ sponsorRouter.get("/", async(req, res)=>{
         res.status(200).send(sponsor)
 })
 
-sponsorRouter.post("/", upload.single("SponsorImage"), async(req, res)=>{
-    
+sponsorRouter.post("/", upload.single("image"), async(req, res)=>{
     try {
        const getSponsor = new Sponsor({
         name: req.body.name,
-        image: req.file.path,
-        loc:req.body.loc,
+        image: req.file.originalname,
+        loc: req.body.loc,
         desc: req.body.desc
     })
     const newSponsor = await getSponsor.save() 
     if(newSponsor){
-        res.status(200).send(newSponsor)
+        res.status(200).send({message: "New Product Created", data: newProduct})
     }
     res.status(500).send({msg: "Fail to Create Sponsor"})
     } catch (error) {
@@ -48,14 +39,14 @@ sponsorRouter.post("/", upload.single("SponsorImage"), async(req, res)=>{
     }
 })
 
-sponsorRouter.put("/:id", async(req, res)=>{
+sponsorRouter.put("/:id",upload.single("image"), async(req, res)=>{
    
     try { 
         const sponsorId = req.params.id;
         const getSponsor = await Sponsor.findById({_id:sponsorId})
         if(getSponsor){
             getSponspor.name = req.body.name;
-            getSponspor.image = req.file.path;
+            getSponspor.image = req.file.originalname;
             getSponspor.loc = req.body.loc;
             getSponspor.desc = req.body.desc;
 

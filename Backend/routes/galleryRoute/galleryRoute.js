@@ -1,36 +1,54 @@
-import Gallery from "../../model/GalleryModel/galleryModel"
-import express from expresss
+import Gallery from "../../model/GalleryModel/galleryModel.js"
+import express from "express"
+import multer from "multer"
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, callback)=>{
+        callback(null, "./frontend/public/uploads/")
+    },
+    filename: (req, file, callback)=>{
+        callback(null, file.originalname)
+    }
+})
+
+const upload = multer({storage:storage})
 
 const galleryRouter = express.Router()
 
 
+
+
 galleryRouter.get("/", async(req, res)=>{
-    const gallery = await Gallery.find({})
+    const gallerys = await Gallery.find({})
+    res.send(gallerys)
+})
+
+galleryRouter.get("/:id", async(req, res)=>{
+    const galleryId = req.params.id
+    const gallery = await Gallery.findById({_id:galleryId})
     res.send(gallery)
 })
 
-
-galleryRouter.post("/", async(req, res)=>{
+galleryRouter.post("/", upload.single("img1"), async(req, res)=>{
     try {
        const newGallery = new Gallery({
-        img1 = req.body.img1,
-        img2 = req.body.img2
+        img1: req.file.originalname
         })
         const savedGallery = await newGallery.save()
         if(savedGallery){
-        res.status(200).send(savedGallery)
+            return res.status(200).json({msg: "Image Uploaded Successfully", data:savedGallery})
         }
-            res.status(500).send({msg: "Error In Saving Picture"}) 
+        return res.status(400).json({msg: "Error In Saving Picture"}) 
     } catch (error) {
-        res.status(400).send({msg:error.msg})
+        res.status(500).json({msg:error.msg})
     }
-    
 })
 
 galleryRouter.delete("/:id", async(req, res)=>{
-    
+        const galleryId = req.params.id
     try {
-        const getGallery = await Gallery.findById(req.body.id)
+        const getGallery = await Gallery.findById(req.params.id)
         if(getGallery){
             const deleteGallery  = await getGallery.remove()
                 if(deleteGallery){
@@ -40,6 +58,9 @@ galleryRouter.delete("/:id", async(req, res)=>{
         }
        
     } catch (error) {
-        res.status(400).send({msg:error.msg})
+        res.status(500).send({msg:error.msg})
     }
 })
+
+
+export default galleryRouter;
