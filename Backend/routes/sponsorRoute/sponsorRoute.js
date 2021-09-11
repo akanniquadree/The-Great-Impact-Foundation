@@ -24,18 +24,18 @@ sponsorRouter.get("/", async(req, res)=>{
 sponsorRouter.post("/", upload.single("image"), async(req, res)=>{
     try {
        const getSponsor = new Sponsor({
-        name: req.body.name,
         image: req.file.originalname,
+        name: req.body.name,
         loc: req.body.loc,
         desc: req.body.desc
     })
     const newSponsor = await getSponsor.save() 
     if(newSponsor){
-        res.status(200).send({message: "New Product Created", data: newProduct})
+        res.status(200).send({message: "New Product Created", data: newSponsor})
     }
-    res.status(500).send({msg: "Fail to Create Sponsor"})
+    res.status(400).send({msg: "Fail to Create Sponsor"})
     } catch (error) {
-        res.status(400).send({msg: error.msg})
+        res.status(500).send({msg: error.msg})
     }
 })
 
