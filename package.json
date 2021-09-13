@@ -8,9 +8,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "devStart": "nodemon backend/server.js",
-    "start": "node backend/server.js"
+    "start": "node Backend/server.js",
+    "devStart": "nodemon backend/server.js"
+    
   },
   "author": "",
   "license": "ISC",
