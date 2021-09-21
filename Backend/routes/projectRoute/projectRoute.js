@@ -19,7 +19,7 @@ const upload = multer({
 })
 
 projectRouter.get("/", async(req, res)=>{
-    const projects = await Project.find({})
+    const projects = await Project.find({}).sort({createdAt: 'desc'})
     res.send(projects)
 })
 
