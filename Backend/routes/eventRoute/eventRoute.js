@@ -24,7 +24,7 @@ const upload = multer({
 
 
 eventRouter.get("/", async(req, res)=>{
-    const event = await Event.find({})
+    const event = await Event.find().sort({createdAt: 'desc'})
     res.send(event)
 })
 
