@@ -4,7 +4,7 @@ import Category from "../../model/BlogModel/Category.js"
 
 const categoryRoute  = express.Router()
 
-categoryRoute.put("/", async (req, res)=>{
+categoryRoute.post("/", async (req, res)=>{
     try {
         const newCat = new Category(req.body)
         const saveCat = await newCat.save()
@@ -17,7 +17,7 @@ categoryRoute.put("/", async (req, res)=>{
 
 categoryRoute.get("/", async(req, res)=>{
         try{
-            const cats = await Category.find()
+            const cats = await Category.find().sort({createdAt: "desc"})
             res.status(200).send(cats)
         }catch(error){
             res.status(500).send({msg: error.msg})

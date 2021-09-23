@@ -2,9 +2,10 @@ import mongoose  from "mongoose";
 
 
 const gallerySchema = new mongoose.Schema({
-    img1:{type: String, required:true}
-})
-
+    img:{type: String, required:true}
+},
+{timestamps:true})
+  
 const Gallery = mongoose.model("Gallery", gallerySchema)
 
 

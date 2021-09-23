@@ -13,7 +13,7 @@ import sponsorRouter from "./routes/sponsorRoute/sponsorRoute.js";
 import eventRouter from "./routes/eventRoute/eventRoute.js";
 import projectRouter from "./routes/projectRoute/projectRoute.js";
 import galleryRouter from "./routes/galleryRoute/galleryRoute.js";
-
+import path from "path"
 
 dotenv.config()
 
@@ -31,26 +31,9 @@ mongoose.connect("mongodb+srv://GIF1234:youngdollar@great-impact-foundation.6itw
     useFindAndModify: false
 }).catch(error=> console.log(error.reason));
 
-//  let storage = multer.diskStorage({
-//      destination: function(req, file, cb){
-//          cb(null, './upload');
-//      }, 
-//      filename: function(req, file, cb){
-//          cb(null, file.originalname)
-//      }
-//  })
-
-//  const upload = multer({storage:storage}).single('file')
-
-//  app.post("/image", upload, (req, res)=>{
-//      if(!req.file) return res.status(400).send("image is required");
-//      return res.json({success:true, message:"image successfully upload"})
-
-     
-//  })
 
 
-
+app.use("/uploads", express.static('upload'));
 app.use("/api/auth", router);
  app.use("/api/user", userRouter);
  app.use("/api/posts", postRouter);
@@ -62,8 +45,12 @@ app.use("/api/auth", router);
  app.use("/api/project", projectRouter);
  app.use("/api/gallery", galleryRouter);
  
-
-
+ if(process.env.NODE_ENV === "production"){
+     app.use(express.static("frontend/build"))
+     app.get("*", (req, res)=>{
+        res.sendFile(path.resolve(__dirname, "client", 'build', "index.html"))
+     })
+ }
 
 
 

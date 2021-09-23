@@ -8,8 +8,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node Backend/server.js",
-    "devStart": "nodemon backend/server.js"
+    "start": "node index.js",
+    "devStart": "nodemon index.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
     
   },
   "author": "",

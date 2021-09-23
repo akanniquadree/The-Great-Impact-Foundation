@@ -1,16 +1,14 @@
 import mongoose from "mongoose"
 
 
-const commentSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-    email: {type: String, required: true},
-    text: {type: String, required: true},
+const categorySchema = new mongoose.Schema({
+    name: {type: String, required: true}
 },
 {timestamps: true}
 )
  
 
-const Comment = mongoose.model("Category", commentSchema)
+const Category = mongoose.model("Category", categorySchema)
 
 
-export default Comment;
+export default Category;

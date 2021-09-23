@@ -1,14 +1,32 @@
 import express from "express"
-import User from "../../model/UserModel/User.js"
 import Post from "../../model/BlogModel/Post.js"
-import bcrypt from "bcrypt"
+import multer from "multer"
 
 const postRouter = express.Router()
 
+const storage = multer.diskStorage({
+    destination: (req, file, callback)=>{
+        callback(null, "./upload/")
+    },
+    filename: (req, file, callback)=>{
+        callback(null, file.originalname)
+    }
+})
+const upload = multer({storage:storage})
 //Create Post
-postRouter.post("/", async (req, res)=>{
-   const newPost = new Post(req.body);
+postRouter.post("/", upload.single("image"), async (req, res)=>{
    try {
+        const newPost = new Post({
+        image : req.file.path,
+        heading : req.body.heading,
+        author: req.body.author,
+        firstPara: req.body.firstPara,
+        secondPara: req.body.secondPara,
+        thirdPara: req.body.thirdPara,
+        fourthPara: req.body.fourthPara,
+        detail: req.body.detail,
+        categories: req.body.categories
+    });
            const savePost = await newPost.save()
            res.status(200).send(savePost)
    } catch (error) {
@@ -19,23 +37,18 @@ postRouter.post("/", async (req, res)=>{
 
 //Get All Post or query
 postRouter.get("/", async(req, res)=>{
-    const username = req.query.user
-    const catName = req.query.cat;
-    const comment  = req.query.comment
+    const author = req.query.author
+    const catName = req.query.cat; 
     try{
         let posts;
-        if(username){
-            posts = await Post.find({username:username})
+        if(author){
+            posts = await Post.find({author}).sort({createdAt: 'desc'})
         }else if (catName){
             posts = await Post.find({categories:{
                 $in:[catName]
-            }})
-        }else if(comment){
-            posts = await Post.find({comment:{
-                $in:[comment]
-            }})
+            }}).sort({createdAt: 'desc'})
         }else{
-            posts = await Post.find({})
+            posts = await Post.find().sort({createdAt: 'desc'})
         }
         res.status(200).send(posts)
     }catch(error){
@@ -43,7 +56,7 @@ postRouter.get("/", async(req, res)=>{
     }
 })
 postRouter.get("/:id", async(req, res)=>{
-       const postId = req.params.id
+    const postId = req.params.id
     try{
         const post = await Post.findById({_id:postId})
         if(post){
@@ -58,24 +71,17 @@ postRouter.get("/:id", async(req, res)=>{
 })
 //updatePost
 
-postRouter.put("/:id", async (req, res)=>{
+postRouter.put("/:id", upload.single("image"),async (req, res)=>{
     try {
-        const getPost = await Post.findById(req.params.id)
-        if(getPost.username === req.body.username){
-            try {
-                const updatePost = await Post.findByIdAndUpdate(req.params.id,{
+            const getPost = await Post.findById(req.params.id)
+            const updatePost = await Post.findByIdAndUpdate(req.params.id,{
                     $set: req.body,
                 },{
                     new:true
                 })
-            } catch (error) {
-                
-            }
             
             res.status(200).send(getPost)
-        }else{
-            res.status(401).send("Cannot Update someoneelse Post")
-        }
+       
 
     } catch (error) {
         
@@ -86,22 +92,19 @@ postRouter.put("/:id", async (req, res)=>{
 
 //delete Post
 postRouter.delete("/:id", async(req, res)=>{
-    if(req.body.userId === req.params.id){
         try {
-            const user = await User.findById(req.body.id)
-            try {
-                await Post.deleteMany({username:user.username})
-               await User.findByIdAndDelete(req.body.id)
-                    res.status(200).send("User has been Deleted")
-            } catch (error) {
-                res.status(500).send({msg:error.message})
+            const post = await Post.findById(req.params.id)
+            if(post){
+                const deletePost = await post.remove()
+                if(deletePost){
+                    res.status(200).send("Post deleted")
+                }else{
+                    res.status(400).send("Error in deleting Post")
+                }
             }
         } catch (error) {
             res.status(500).send({msg:error.message})
         }
-    }else{
-    res.status(401).send("You can only update your own account")
-}
 })
 
 

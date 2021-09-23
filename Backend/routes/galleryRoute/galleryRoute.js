@@ -5,7 +5,7 @@ import multer from "multer"
 
 const storage = multer.diskStorage({
     destination: (req, file, callback)=>{
-        callback(null, "./frontend/public/uploads/")
+        callback(null, "../frontend/public/uploads/")
     },
     filename: (req, file, callback)=>{
         callback(null, file.originalname)
@@ -20,7 +20,7 @@ const galleryRouter = express.Router()
 
 
 galleryRouter.get("/", async(req, res)=>{
-    const gallerys = await Gallery.find({})
+    const gallerys = await Gallery.find({}).sort({createdAt:"desc"})
     res.send(gallerys)
 })
 
@@ -30,18 +30,18 @@ galleryRouter.get("/:id", async(req, res)=>{
     res.send(gallery)
 })
 
-galleryRouter.post("/", upload.single("img1"), async(req, res)=>{
+galleryRouter.post("/", upload.single("img"), async(req, res)=>{
     try {
        const newGallery = new Gallery({
-        img1: req.file.originalname
+        img: req.file.originalname
         })
         const savedGallery = await newGallery.save()
         if(savedGallery){
-            return res.status(200).json({msg: "Image Uploaded Successfully", data:savedGallery})
+            return res.status(200).send(savedGallery)
         }
-        return res.status(400).json({msg: "Error In Saving Picture"}) 
+        return res.status(400).send("Error In Saving Picture") 
     } catch (error) {
-        res.status(500).json({msg:error.msg})
+        res.status(500).send({msg:error.msg})
     }
 })
 
