@@ -16,6 +16,9 @@ import galleryRouter from "./routes/galleryRoute/galleryRoute.js";
 import path from "path"
 import cors from "cors"
 
+
+const __dirname = path.resolve();
+
 dotenv.config()
 
 const app = express();
