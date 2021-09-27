@@ -9,12 +9,7 @@
   "type": "module",
   "scripts": {
     "devStart": "nodemon backend/index.js",
-    "build": "cd frontend && npm run build",
-        "install-client": "cd frontend && npm install",
-        "heroku-postbuild": "npm run install-frontend && npm run build",
-        "server": "nodemon index.js",
-        "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\"",
-        "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\""
+    "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build"
   },
   "author": "",
   "license": "ISC",
