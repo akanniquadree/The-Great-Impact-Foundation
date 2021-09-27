@@ -47,10 +47,9 @@ app.use("/api/auth", router);
  app.use("/api/gallery", galleryRouter);
  
  if(process.env.NODE_ENV === 'production'){
-     app.use(express.static(path.resolve(__dirname, "./frontend/build")))
+     app.use(express.static(path.join(__dirname, '../build')))
      app.get("*", (req, res)=>{
-        res.sendFile(path.resolve(__dirname, "./frontend/build", "index.html"));
-     })
+        res.sendFile(path.join(__dirname, '../build'))
  }
 
 
