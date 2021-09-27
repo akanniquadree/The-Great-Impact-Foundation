@@ -57,7 +57,7 @@ eventRouter.post("/", upload.single("image"), async(req, res)=>{
             phone: req.body.phone ,
         })
         const saveEvent = await newEvent.save()
-        if(savedEvent){
+        if(saveEvent){
             res.status(200).send({msg: "Event Successfully Created"})
         }else{
             res.status(401).send({msg: "Error in creating event"})
@@ -69,7 +69,7 @@ eventRouter.post("/", upload.single("image"), async(req, res)=>{
 
 eventRouter.delete("/:id", async(req, res)=>{
     try {
-        const getEvent = await Event.findById(req.body.id)
+        const getEvent = await Event.findById(req.params.id)
         if(getEvent){
             await getEvent.remove();
             res.send("Event Successfully Deleted")
