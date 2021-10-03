@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "devStart": "nodemon backend/index.js",
-    "build": "cd frontend && npm run build",
+    "buildClient": "cd frontend/ && npm install && npm run build",
       "install-frontend": "cd frontend && npm install",
         "heroku-postbuild": "npm run install-frontend && npm run build",
         "server": "nodemon index.js",
