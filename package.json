@@ -11,7 +11,7 @@
     "devStart": "nodemon backend/index.js",
     "buildClient": "cd frontend/ && npm install && npm run build",
       "install-frontend": "cd frontend && npm install",
-        "heroku-postbuild": "npm run install-frontend && npm run build",
+        "heroku-postbuild": "npm run install-frontend && npm run-script buildClient",
         "server": "nodemon index.js",
         "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\"",
         "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\""
