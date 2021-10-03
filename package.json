@@ -8,9 +8,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node Backend/index.js",
     "devStart": "nodemon backend/index.js",
-    "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build"
+    "build": "cd frontend && npm run build",
+      "install-frontend": "cd frontend && npm install",
+        "heroku-postbuild": "npm run install-frontend && npm run build",
+        "server": "nodemon index.js",
+        "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\"",
+        "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\""
   },
   "author": "",
   "license": "ISC",
