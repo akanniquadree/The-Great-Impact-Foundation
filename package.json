@@ -9,8 +9,7 @@
   "type": "module",
   "scripts": {
     "start": "node Backend/index.js",
-    "build": "cd frontend && npm install && npm run build",
-    "heroku-postbuild": "npm run install-frontend && npm run-script build"
+    "heroku-postbuild":"cd frontend && npm install && npm run build"
 
   },
   "author": "",
