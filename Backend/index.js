@@ -35,7 +35,7 @@ mongoose.connect("mongodb+srv://GIF1234:youngdollar@great-impact-foundation.6itw
     useFindAndModify: false
 }).catch(error=> console.log(error.reason));
 
-
+app.use(express.static(path.resolve(__dirname, '../frontend/build')));
 
 app.use("/uploads", express.static('upload'));
 app.use("/api/auth", router);
@@ -49,13 +49,9 @@ app.use("/api/auth", router);
  app.use("/api/project", projectRouter);
  app.use("/api/gallery", galleryRouter);
  
- if(process.env.NODE_ENV === 'production'){
-     app.use(express.static(path.resolve(__dirname, "../frontend/build")))
-
-     app.get("*", (req, res)=>{
-        res.sendFile(path.resolve(__dirname, "../frontend/build", "index.html"))
-     })
- }
+ app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
+  });
 
 
 
