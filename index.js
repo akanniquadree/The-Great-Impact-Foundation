@@ -52,5 +52,5 @@ if(process.env.NODE_ENV === "production"){
 
 
 app.listen(process.env.PORT || "5000", ()=>{
-    console.log("backend is running effectively")
+    console.log("backend is running effective")
 })
