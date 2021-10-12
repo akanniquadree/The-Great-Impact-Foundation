@@ -50,7 +50,7 @@ app.use("/api/auth", router);
 
 
 if(process.env.NODE_ENV === "production"){
-   app.use("../frontend/build")
+   app.use("frontend/build")
 }
 
 
