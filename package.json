@@ -8,11 +8,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
     "build":"cd frontend && npm run build",
     "install-client": "cd frontend && npm install",
-    "heroku-postbuild":"npm run install-client && run build"
-
+    "heroku-postbuild":"npm run install-client && run build",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
