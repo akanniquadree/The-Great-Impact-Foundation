@@ -1,18 +1,16 @@
 import express from "express"
 import dotenv from "dotenv"
-import config from "./config.js";
 import mongoose from "mongoose"
-import multer from "multer";
-import router from "./routes/userRoute/auth.js";
-import userRouter from "./routes/userRoute/userRoute.js";
-import postRouter from "./routes/blogRoute/postsRoute.js";
-import categoryRoute from "./routes/blogRoute/categoriesRoute.js";
-import teamRoute from "./routes/teamRoute/team.js";
-import volunteeRouter from "./routes/volunteeRoute/volunteeRoute.js";
-import sponsorRouter from "./routes/sponsorRoute/sponsorRoute.js";
-import eventRouter from "./routes/eventRoute/eventRoute.js";
-import projectRouter from "./routes/projectRoute/projectRoute.js";
-import galleryRouter from "./routes/galleryRoute/galleryRoute.js";
+import router from "./Backend/routes/userRoute/auth.js";
+import userRouter from "./Backend/routes/userRoute/userRoute.js";
+import postRouter from "./Backend/routes/blogRoute/postsRoute.js";
+import categoryRoute from "./Backend/routes/blogRoute/categoriesRoute.js";
+import teamRoute from "./Backend/routes/teamRoute/team.js";
+import volunteeRouter from "./Backend/routes/volunteeRoute/volunteeRoute.js";
+import sponsorRouter from "./Backend/routes/sponsorRoute/sponsorRoute.js";
+import eventRouter from "./Backend/routes/eventRoute/eventRoute.js";
+import projectRouter from "./Backend/routes/projectRoute/projectRoute.js";
+import galleryRouter from "./Backend/routes/galleryRoute/galleryRoute.js";
 import path from "path"
 import cors from "cors"
 
@@ -35,8 +33,6 @@ mongoose.connect("mongodb+srv://GIF1234:youngdollar@great-impact-foundation.6itw
     useFindAndModify: false
 }).catch(error=> console.log(error.reason));
 
-
-app.use("/uploads", express.static('upload'));
 app.use("/api/auth", router);
  app.use("/api/user", userRouter);
  app.use("/api/posts", postRouter);
