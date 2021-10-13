@@ -37,7 +37,7 @@ mongoose.connect("mongodb+srv://GIF1234:youngdollar@great-impact-foundation.6itw
 if(process.env.NODE_ENV === "production"){
    app.use(express.static("frontend/build"))
    app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname,  "frontend/build", "index.html"));
+    res.sendFile(path.join(__dirname,  "build", "index.html"));
   });
 }
 
