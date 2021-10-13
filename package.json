@@ -8,8 +8,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    
-    "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build",
+    "frontend": "npm start --prefix frontend",
+    "frontendinstall": "npm install --prefix frontend",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend",
     "start": "node index.js"
   },
   "author": "",
