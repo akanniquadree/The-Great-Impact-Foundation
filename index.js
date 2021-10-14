@@ -15,7 +15,6 @@ import path from "path"
 import cors from "cors"
 
 
-const __dirname = path.resolve();
 
 dotenv.config()
 
@@ -33,17 +32,6 @@ mongoose.connect("mongodb+srv://GIF1234:youngdollar@great-impact-foundation.6itw
     useFindAndModify: false
 }).catch(error=> console.log(error.reason));
 
-
-if(process.env.NODE_ENV === 'production'){    
-    app.use(express.static('frontend/build'))  // set static folder 
-    //returning frontend for any route other than api 
-    app.get('*',(req,res)=>{     
-        res.sendFile (path.resolve(__dirname,'frontend','build',         
-                      'index.html' ));    
-    });
-}
-
-
 app.use("/api/auth", router);
  app.use("/api/user", userRouter);
  app.use("/api/posts", postRouter);
@@ -55,8 +43,18 @@ app.use("/api/auth", router);
  app.use("/api/project", projectRouter);
  app.use("/api/gallery", galleryRouter);
 
-
-
+const __dirname = path.resolve();
+ if(process.env.NODE_ENV === "production"){    
+    app.use(express.static(path.join(__dirname,"/frontend/build")))  // set static folder 
+    //returning frontend for any route other than api 
+    app.get("*", (req, res)=>{     
+        res.sendFile(path.resolve(__dirname,"frontend","build","index.html"));    
+    });
+} else{
+    app.get("/", (req, res)=>{
+        res.send("API IS RUNNING")
+    })
+}
 
 
 

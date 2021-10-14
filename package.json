@@ -10,7 +10,7 @@
   "scripts": {
     
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd frontend && npm install --only=dev && npm install && npm run build",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
